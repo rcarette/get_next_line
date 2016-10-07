@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/10/06 00:42:53 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/10/07 23:13:57 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_realloc(char **ptr, char *s1)
 			return ;
 		strcpy(*ptr, s1);
 	}
-	if (i != 1)
+	else if(i != 1)
 	{
 		str = (char *)malloc(sizeof(char) * (strlen(s1) + strlen(*ptr) + 1));
 		if (str == NULL)
@@ -44,18 +44,13 @@ void	ft_realloc(char **ptr, char *s1)
 
 int		ft_getline(char **line, char **str)
 {
-	int				size_str;
 	int				i;
 	static int		j = 0;
 
-	i = 0;
-	if (*line == NULL)
-	{
-		size_str = strlen(*str);
-		if (!(*line = malloc(sizeof(char) * (size_str + 1))))
+		i = 0;
+		if (!(*line = malloc(sizeof(char) * (strlen(*str) + 1))))
 			return (-1);
-		bzero(*line, size_str + 1);
-	}
+		bzero(*line, strlen(*str) + 1);
 	while ((*str)[j] != '\0')
 	{
 		if ((*str)[j] != '\n')
@@ -78,7 +73,7 @@ int		get_next_line(int const fd, char **line)
 	static char		*str;
 
 	ret = 0;
-	if (fd <= 0)
+	if (fd <= 0 || BUFF_SIZE <= 0)
 		return (-1);
 	while ((ret = read(fd, board, BUFF_SIZE)))
 	{
@@ -101,13 +96,11 @@ int		main(int argc, char **argv)
 	i = 0;
 
 	s1 = NULL;
-		while (++i < argc)
-		{
-			fd = open(argv[i], O_RDONLY);
-			while (get_next_line(fd, &s1))
-			{
-				printf("%s", s1);
-			}
-		}
+			fd = open(argv[1], O_RDONLY);
+			get_next_line(fd, &s1);
+			printf("%s", s1);
+			free(s1);
+			s1 = NULL ;
+
 	return (0);
 }
