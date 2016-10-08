@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/10/07 23:13:57 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/10/08 02:32:23 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,32 +15,6 @@
 #include <fcntl.h>
 #include <string.h>
 
-void	ft_realloc(char **ptr, char *s1)
-{
-	char	*str;
-	int		i;
-
-	i = 0;
-	if (*ptr == NULL)
-	{
-		i = 1;
-		if (!(*ptr = (char *)malloc(sizeof(char) * strlen(s1) + 1)))
-			return ;
-		strcpy(*ptr, s1);
-	}
-	else if(i != 1)
-	{
-		str = (char *)malloc(sizeof(char) * (strlen(s1) + strlen(*ptr) + 1));
-		if (str == NULL)
-			return ;
-		strcpy(str, *ptr);
-		strcat(str, s1);
-		if (!(*ptr = (char *)malloc(sizeof(char) * (strlen(str) + 1))))
-			return ;
-		strcpy(*ptr, str);
-		free(str);
-	}
-}
 
 int		ft_getline(char **line, char **str)
 {
@@ -66,41 +40,47 @@ int		ft_getline(char **line, char **str)
 	}
 }
 
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char		*str;
+	int			i;
+
+	i = -1;
+	str = (char *)malloc(sizeof(char) * (strlen(s1) + strlen(s2) + 1));
+	if (str)
+	{
+		while (*s1)
+			str[++i] = *s1++;
+		while (*s2)
+			str[++i] = *s2++;
+		str[++i] = '\0';
+		return (str);
+	}
+	return (NULL);
+}
+
 int		get_next_line(int const fd, char **line)
 {
 	char			board[BUFF_SIZE];
 	size_t			ret;
-	static char		*str;
+    static char		*str = "";
 
 	ret = 0;
-	if (fd <= 0 || BUFF_SIZE <= 0)
+	if (fd < 0 || BUFF_SIZE <= 0)
 		return (-1);
 	while ((ret = read(fd, board, BUFF_SIZE)))
 	{
 		board[ret] = '\0';
-		ft_realloc(&str, board);
+		str = ft_strjoin(str, board);
 	}
 	return (ft_getline(line, &str));
 }
 
 int		main(int argc, char **argv)
 {
-	int		fd;
-
-	fd = 0;
+	int		descriptor = open(argv[1], O_RDONLY);
 	char	*s1;
-	(void)argc;
-	(void)argv;
-	int		i;
-
-	i = 0;
-
-	s1 = NULL;
-			fd = open(argv[1], O_RDONLY);
-			get_next_line(fd, &s1);
-			printf("%s", s1);
-			free(s1);
-			s1 = NULL ;
-
+	while (get_next_line(descriptor, &s1))
+		printf("%s", s1);
 	return (0);
 }
