@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/10/23 19:16:54 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/10/23 20:40:26 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int		ft_getline(char **line, char **str)
 			return (1);
 		}
 	}
-	printf("Passage ici !");
 	free(*str);
 	return (0);
 }
@@ -45,7 +44,7 @@ int		get_next_line(int const fd, char **line)
 {
 	char			board[BUFF_SIZE];
 	size_t			ret;
-    static char		*str = "";
+    static char		*str = NULL;
 	char			*temporary;
 
 	ret = 0;
@@ -54,38 +53,45 @@ int		get_next_line(int const fd, char **line)
 	while ((ret = read(fd, board, BUFF_SIZE)))
 	{
 		board[ret] = '\0';
-		if (*str == '\0')
+		if (str == NULL)
 		{
+			printf("Passage 1\n");
 			str = (char *)malloc(sizeof(char) * strlen(board) + 1);
+			if (str == NULL)
+				exit(EXIT_FAILURE);
 			memcpy(str, board, strlen(board) + 1);
 		}
 		else
 		{
-			temporary = (char *)malloc(sizeof(char) * strlen(str) + 1);
+			printf("Passage 2\n");
+			if (!(temporary = (char *)malloc(sizeof(char) * strlen(str) + 1)))
+				exit(EXIT_FAILURE);
 			memcpy(temporary, str, strlen(str) + 1);
 			free(str);
 			str = NULL;
 			str = malloc(sizeof(char) * strlen(temporary) + strlen(board) + 1);
+			if (str == NULL)
+				exit(EXIT_FAILURE);
 			memcpy(str,temporary, strlen(temporary) + 1);
 			strcat(str, board);
 			free(temporary);
 		}
 	}
-
 	return (ft_getline(line, &str));
 }
 
 int		main(int argc, char **argv)
 {
-	int		descriptor = open("romainCarette", O_RDONLY);
+	int		descriptor = 0;
 	char	*s1;
 	s1 = NULL;
-		
-		get_next_line(descriptor, &s1);
-		printf("%s", s1);
+	descriptor = open("test", O_RDONLY);
+	while (get_next_line(descriptor, &s1))
+	{
+		printf("%s\n", s1);
 		free(s1);
-		get_next_line(descriptor, &s1);
-		printf("%s", s1);
-		free(s1);
+	}
+	free(s1);
+
 	return (0);
 }
