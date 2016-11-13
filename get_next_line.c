@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/10/23 21:46:25 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/11/13 11:37:49 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,61 +15,131 @@
 #include <fcntl.h>
 #include <string.h>
 
-int		ft_getline(char **line, char **str)
+int		ft_search(char *board, char **line)
 {
-	int				i;
-	static int		j = 0;
+	int		iterator;
+	short	i;
+	char	*temporary;
+
+	iterator = -1;
+	i = 1;
+	while (board[++iterator])
+		if (board[iterator] == '\n')
+		{
+			i = -1;
+			return (SUCCESS);
+		}
+	if (i = 1 && *line == NULL)
+	{
+		if (!(*line = ft_strnew(BUFF_SIZE + 1)))
+			return (ERR);
+		memcpy(*line, board, (BUFF_SIZE + 1));
+	}
+	else
+	{
+		temporary = *line;
+		*line = ft_strjoin(temporary, board + i);
+		free(temporary);
+	}
+	return (0);
+}
+
+int		ft_assembly_str(char *board, char **line, char **str)
+{
+	size_t		i;
+	char		*temporary;
+	char		tab[BUFF_SIZE + 1];
 
 	i = 0;
-	if (!(*line = malloc(sizeof(char) * (strlen(*str) + 1))))
-		return (-1);
-	bzero(*line, strlen(*str) + 1);
-	while ((*str)[j] != '\0')
+	if (board[i] == '\n' && board[i + 1] != '\0')
+		return (ft_save(board, str, i));
+	if (*line != NULL && (board[i] != '\n' && board[i + 1] != '\0'))
 	{
-		if ((*str)[j] != '\n')
-			(*line)[i++] = (*str)[j++];
-		else if ((*str)[j] == '\n')
+		while (board[i] && board[i] != '\n')
 		{
-			(*line)[i] = '\0';
-			j++;
-			return (1);
+			tab[i] = board[i];
+			i++;
 		}
+		tab[i] = '\0';
+		temporary = *line;
+		*line = ft_strjoin(temporary, tab);
+		free(temporary);
+		return ((board[i] == '\n' && board[i + 1] == '\0') ? SUCCESS: ft_save(board, str, i));
 	}
-	free(*str);
-	return (0);
+	if (*line == NULL)
+	{
+		while (board[i] && board[i] != '\n')
+			++i;
+		*line = (char *)malloc(sizeof(char) * (i + 1));
+		memcpy(*line, board, i);
+		(*line)[i] = '\0';
+		return ((board[i] == '\n' && board[i + 1] == '\0') ? SUCCESS : ft_save(board, str, i));
+	}
+	return (((board[i] == '\n' && board[i + 1] == '\0') ? SUCCESS : 0));
+}
+
+int		ft_save(char *board, char **str, int position)
+{
+	size_t		i;
+	size_t		j;
+
+	i = 0;
+	j = position;
+	if (board[position] == '\n')
+	{
+		++position;
+		j = position;
+	}
+	while (board[position])
+		++position;
+	if (!((*str) = (char *)malloc(sizeof(char) * (position + 1))))
+		return (ERR);
+	while (board[j])
+	{
+		(*str)[i] = board[j];
+		++i;
+		++j;
+	}
+	(*str)[i] = '\0';
+	return (SUCCESS);
 }
 
 int		get_next_line(int const fd, char **line)
 {
-	char			board[BUFF_SIZE + 1];
-	size_t			ret;
 	static char		*str = NULL;
-	char			*temporary;
-
+	t_struct		s1;
+	if(str != NULL)
+	{
+		//printf("%s", str);
+		return (-1);
+	}
 	if (fd < 0 || BUFF_SIZE <= 0)
 		return (-1);
-	while ((ret = read(fd, board, BUFF_SIZE)))
+	while ((s1.ret = read(fd, s1.board, BUFF_SIZE)))
 	{
-		board[ret] = '\0';
-		if (str == NULL)
+		s1.board[s1.ret] = '\0';
+		if (ft_search(s1.board, line) == SUCCESS)
 		{
-			if (!(str = (char *)malloc(sizeof(char) * strlen(board) + 1)))
-				exit(EXIT_FAILURE);
-			memcpy(str, board, strlen(board) + 1);
-		}
-		else
-		{
-			if (!(temporary = (char *)malloc(sizeof(char) * strlen(str) + 1)))
-				exit(EXIT_FAILURE);
-			memcpy(temporary, str, strlen(str) + 1);
-			free(str);
-			str = malloc(sizeof(char) * (strlen(temporary) + strlen(board) + 1));
-			if (str == NULL)
-				exit(EXIT_FAILURE);
-			memcpy(str,temporary, strlen(temporary) + 1);
-			strcat(str, board);
-			free(temporary);
+			if (ft_assembly_str(s1.board, line, &str) == SUCCESS)
+				return (SUCCESS);
 		}
 	}
-	return (ft_getline(line, &str));
+	return (s1.ret);
+}
+
+int		main(void)
+{
+	char	*s1;
+	int		descriptor;
+	s1 = NULL;
+	descriptor = open("romainCarette", O_RDONLY);
+	get_next_line(descriptor, &s1);
+	printf("%s", s1);
+	free(s1);
+	s1 = NULL;
+	get_next_line(descriptor, &s1);
+	printf("%s", s1);
+	free(s1);
+	s1 = NULL;
+	return (0);
 }
