@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/13 11:37:49 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/11/13 12:36:58 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int		ft_search(char *board, char **line)
 	return (0);
 }
 
-int		ft_assembly_str(char *board, char **line, char **str)
+int		ft_assembly_line(char *board, char **line, char **str)
 {
 	size_t		i;
 	char		*temporary;
@@ -104,14 +104,63 @@ int		ft_save(char *board, char **str, int position)
 	return (SUCCESS);
 }
 
+int		ft_assembly_str(char **str, char **line)
+{
+	size_t		i;
+	size_t		j;
+	size_t		x;
+	char		*temporary;
+
+	j = 0;
+	i = 0;
+	x = 0;
+	((*str)[i] == '\n') ? i++ : 0;
+	j = i;
+	if (*line == NULL)
+	{
+		while ((*str)[i] && (*str)[i] != '\n')
+			++i;
+		*line = (char *)malloc(sizeof(char) * (i + 1));
+		while ((*str)[j] && (*str)[j] != '\n')
+		{
+			(*line)[x] = (*str)[j];
+			++x;
+			++j;
+		}
+		(*line)[x] = '\0';
+		if ((*str)[j] == '\0')
+		{
+			free(*str);
+			*str = NULL;
+			return (0);
+		}
+		else if ((*str)[j] == '\n')
+		{
+			++j;
+			x = 0;
+			temporary = ft_strnew(BUFF_SIZE + 1);
+			while ((*str)[j])
+			{
+				temporary[x] = (*str)[j];
+				++x;
+				++j;
+			}
+			temporary[x] = '\0';
+			free(*str);
+			*str = temporary;
+		}
+	}
+	return (SUCCESS);
+}
+
 int		get_next_line(int const fd, char **line)
 {
 	static char		*str = NULL;
 	t_struct		s1;
 	if(str != NULL)
 	{
-		//printf("%s", str);
-		return (-1);
+		if (ft_assembly_str(&str, line) == SUCCESS)
+			return (SUCCESS);
 	}
 	if (fd < 0 || BUFF_SIZE <= 0)
 		return (-1);
@@ -120,7 +169,7 @@ int		get_next_line(int const fd, char **line)
 		s1.board[s1.ret] = '\0';
 		if (ft_search(s1.board, line) == SUCCESS)
 		{
-			if (ft_assembly_str(s1.board, line, &str) == SUCCESS)
+			if (ft_assembly_line(s1.board, line, &str) == SUCCESS)
 				return (SUCCESS);
 		}
 	}
@@ -133,13 +182,11 @@ int		main(void)
 	int		descriptor;
 	s1 = NULL;
 	descriptor = open("romainCarette", O_RDONLY);
-	get_next_line(descriptor, &s1);
-	printf("%s", s1);
-	free(s1);
-	s1 = NULL;
-	get_next_line(descriptor, &s1);
-	printf("%s", s1);
-	free(s1);
-	s1 = NULL;
+	while (get_next_line(descriptor, &s1) == 1)
+	{
+		printf("%s", s1);
+		free(s1);
+		s1 = NULL;
+	}
 	return (0);
 }

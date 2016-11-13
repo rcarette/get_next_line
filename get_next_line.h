@@ -6,13 +6,13 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:19:08 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/13 11:36:33 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/11/13 12:37:34 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# define BUFF_SIZE 15
+# define BUFF_SIZE 31
 # include <unistd.h>
 # include <stdlib.h>
 
@@ -32,4 +32,5 @@ void				*ft_memset(void *s, int c, size_t n);
 void				*ft_memcpy(void *dest, const void *src, size_t n);
 char				*ft_strjoin(char const *s1, char const *s2);
 size_t				ft_strlen(const char *s);
+int					ft_assembly_str(char **str, char **line);
 #endif
