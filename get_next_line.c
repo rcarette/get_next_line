@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/16 17:24:32 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/11/16 18:23:30 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,16 @@ int		get_next_line(int const fd, char **line)
 	if (stock)
 		if (ft_search_stock(&stock, line))
 			return (1);
-	if (fd < 0 || BUFF_SIZE <= 0)
+	if (fd < 0 || !line || BUFF_SIZE <= 0)
 		return (-1);
 	while ((ret = read(fd, board, BUFF_SIZE)) > 0)
 	{
 		board[ret] = '\0';
 		if (ft_search(board, &stock, line))
 			return (1);
-		*line = ft_strjoin(*line, board);
+		else
+			if (!(*line = ft_strjoin(*line, board)))
+				return (-1);
 	}
-	if (ret == -1)
-		return (0);
-	return (ret);
+	return (0);
 }
