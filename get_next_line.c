@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/16 18:23:30 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/11/16 19:20:14 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int		ft_search(char *board, char **stock, char **line)
 {
 	char	*temporary;
-
 	if ((temporary = ft_strchr(board, '\n')))
 	{
 		*temporary = '\0';
@@ -47,7 +46,7 @@ int		ft_search_stock(char **stock, char **line)
 
 int		get_next_line(int const fd, char **line)
 {
-	static char		*stock;
+	static char		*stock = NULL;
 	int				ret;
 	char			board[BUFF_SIZE + 1];
 
@@ -61,9 +60,8 @@ int		get_next_line(int const fd, char **line)
 		board[ret] = '\0';
 		if (ft_search(board, &stock, line))
 			return (1);
-		else
-			if (!(*line = ft_strjoin(*line, board)))
+		if (!(*line = ft_strjoin(*line, board)))
 				return (-1);
 	}
-	return (0);
+	return (-1);
 }
