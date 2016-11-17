@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/17 13:57:13 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/11/17 14:17:36 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int		ft_search_stock(char **stock, char **line)
 	return (1);
 }
 
-int		get_next_line(int const fd, char **line)
+	int		get_next_line(int const fd, char **line)
 {
 	static char		*stock = NULL;
 	int				ret;
@@ -109,5 +109,7 @@ int		get_next_line(int const fd, char **line)
 			return (1);
 		ft_assembly(line, board);
 	}
+	free(*line);
+	*line = NULL;
 	return (ret < 0 ? -1 : 0);
 }

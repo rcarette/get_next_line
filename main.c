@@ -13,6 +13,7 @@ int main()
 
 	while((ret = get_next_line(fd, &line))) {
 		printf("%d, %s\n", ret, line);
+		free(line);
 	}
 	printf("%d - %s", ret, line);
 	return (0);
