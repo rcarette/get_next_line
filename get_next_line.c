@@ -6,7 +6,7 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/17 11:54:48 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/11/17 13:57:13 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 int		ft_search(char *board, char **stock, char **line)
 {
 	char	*t_li;
-	char	*temporary;
+	char	*t;
 
 	if (!(t_li = strchr(board, '\n')))
 		return (0);
@@ -32,12 +32,12 @@ int		ft_search(char *board, char **stock, char **line)
 		t_li = NULL;
 		return (1);
 	}
-	temporary = *line;
-	if (!(*line = malloc(sizeof(char) * (strlen(board) + strlen(temporary)) + 1)))
+	t = *line;
+	if (!(*line = malloc(sizeof(char) * (strlen(board) + strlen(t)) + 1)))
 		return (-1);
-	strcpy(*line, temporary);
+	strcpy(*line, t);
 	strcat(*line, board);
-	free(temporary);
+	free(t);
 	*stock = strdup(t_li + 1);
 	return (1);
 }
@@ -45,6 +45,7 @@ int		ft_search(char *board, char **stock, char **line)
 int		ft_assembly(char **line, char *board)
 {
 	char	*t_li;
+
 	if (*line == NULL)
 	{
 		if (!(*line = malloc(sizeof(char) * (strlen(board) + 1))))
@@ -69,7 +70,8 @@ int		ft_search_stock(char **stock, char **line)
 	t_li = strchr(*stock, '\n');
 	if (t_li == NULL)
 	{
-		*line = strdup(*stock);
+		if (!(*line = strdup(*stock)))
+			return (-1);
 		free(*stock);
 		*stock = NULL;
 		return (0);
@@ -77,9 +79,11 @@ int		ft_search_stock(char **stock, char **line)
 	else
 	{
 		*t_li = '\0';
-		*line = strdup(*stock);
+		if (!(*line = strdup(*stock)))
+			return (-1);
 		temporary = *stock;
-		*stock = strdup(t_li + 1);
+		if (!(*stock = strdup(t_li + 1)))
+			return (-1);
 		free(temporary);
 		temporary = NULL;
 	}
