@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memccpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/09/29 18:19:08 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/18 16:34:26 by rcarette         ###   ########.fr       */
+/*   Created: 2016/09/14 05:13:20 by rcarette          #+#    #+#             */
+/*   Updated: 2016/11/17 14:54:25 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "includes/libft.h"
 
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 21
-# include <unistd.h>
-# include <stdlib.h>
-# include "libft/includes/libft.h"
+void	*ft_memccpy(void *dest, const void *src, int c, size_t n)
+{
+	char		*str_d;
+	char		*str_s;
+	size_t		i;
 
-int		get_next_line(int const fd, char **line);
-int		ft_search(char *board, char **str, char **line);
-int		ft_search_stock(char **stock, char **line);
-void	ft_assembly(char **line, char *b);
-#endif
+	str_d = (char *)dest;
+	str_s = (char *)src;
+	i = 0;
+	while (i < n)
+	{
+		str_d[i] = str_s[i];
+		if (str_s[i] == (char)c)
+			return ((void*)&str_d[i + 1]);
+		i++;
+	}
+	return (NULL);
+}

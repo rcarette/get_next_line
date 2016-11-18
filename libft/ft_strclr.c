@@ -1,25 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strclr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/09/29 18:19:08 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/18 16:34:26 by rcarette         ###   ########.fr       */
+/*   Created: 2016/09/20 08:19:49 by rcarette          #+#    #+#             */
+/*   Updated: 2016/11/17 14:59:56 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "includes/libft.h"
 
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 21
-# include <unistd.h>
-# include <stdlib.h>
-# include "libft/includes/libft.h"
-
-int		get_next_line(int const fd, char **line);
-int		ft_search(char *board, char **str, char **line);
-int		ft_search_stock(char **stock, char **line);
-void	ft_assembly(char **line, char *b);
-#endif
+void	ft_strclr(char *s)
+{
+	if (s != NULL && ft_strlen(s) > 0)
+		ft_bzero(s, ft_strlen(s));
+}

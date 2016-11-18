@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   lst_lenght.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/09/29 18:19:08 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/18 16:34:26 by rcarette         ###   ########.fr       */
+/*   Created: 2016/10/20 11:15:00 by rcarette          #+#    #+#             */
+/*   Updated: 2016/11/17 15:08:17 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "includes/libft.h"
 
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 21
-# include <unistd.h>
-# include <stdlib.h>
-# include "libft/includes/libft.h"
+int		lst_lenght(t_list *list)
+{
+	size_t		i;
 
-int		get_next_line(int const fd, char **line);
-int		ft_search(char *board, char **str, char **line);
-int		ft_search_stock(char **stock, char **line);
-void	ft_assembly(char **line, char *b);
-#endif
+	i = 0;
+	while (list)
+	{
+		i++;
+		list = list->next;
+	}
+	return (i);
+}

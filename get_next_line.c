@@ -6,38 +6,28 @@
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/29 18:22:04 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/17 21:57:47 by rcarette         ###   ########.fr       */
+/*   Updated: 2016/11/18 16:25:01 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <string.h>
 
 int		ft_search(char *board, char **stock, char **line)
 {
 	char	*t_li;
 	char	*t;
 
-	if (!(t_li = strchr(board, '\n')))
+	if (!(t_li = ft_strchr(board, '\n')))
 		return (0);
 	*t_li = '\0';
-	if ((*line) == NULL)
-	{
-		*line = strdup(board);
-		*stock = strdup(t_li + 1);
-		if (!(*stock || *line))
-			return (-1);
-		t_li = NULL;
-		return (1);
-	}
 	t = *line;
-	if (!(*line = (char *)malloc(sizeof(char) * (strlen(board)
-						+ strlen(t)) + 1)))
+	if (!(*line = (char *)malloc(sizeof(char) * (ft_strlen(board)
+						+ ft_strlen(t)) + 1)))
 		return (-1);
-	strcpy(*line, t);
-	strcat(*line, board);
+	ft_strcpy(*line, t);
+	ft_strcat(*line, board);
 	free(t);
-	*stock = strdup(t_li + 1);
+	*stock = ft_strdup(t_li + 1);
 	return (1);
 }
 
@@ -47,16 +37,16 @@ void	ft_assembly(char **line, char *b)
 
 	if (*line == NULL)
 	{
-		if (!(*line = malloc(sizeof(char) * (strlen(b) + 1))))
+		if (!(*line = malloc(sizeof(char) * (ft_strlen(b) + 1))))
 			return ;
-		strcpy(*line, b);
+		ft_strcpy(*line, b);
 	}
 	t_li = *line;
-	if (!(*line = (char *)malloc(sizeof(char) * (strlen(b)
-						+ strlen(t_li) + 1))))
+	if (!(*line = (char *)malloc(sizeof(char) * (ft_strlen(b)
+						+ ft_strlen(t_li) + 1))))
 		return ;
-	strcpy(*line, t_li);
-	strcat(*line, b);
+	ft_strcpy(*line, t_li);
+	ft_strcat(*line, b);
 	free(t_li);
 }
 
@@ -65,10 +55,10 @@ int		ft_search_stock(char **stock, char **line)
 	char	*t_li;
 	char	*temporary;
 
-	t_li = strchr(*stock, '\n');
+	t_li = ft_strchr(*stock, '\n');
 	if (t_li == NULL)
 	{
-		if (!(*line = strdup(*stock)))
+		if (!(*line = ft_strdup(*stock)))
 			return (-1);
 		free(*stock);
 		*stock = NULL;
@@ -76,10 +66,10 @@ int		ft_search_stock(char **stock, char **line)
 	else
 	{
 		*t_li = '\0';
-		if (!(*line = strdup(*stock)))
+		if (!(*line = ft_strdup(*stock)))
 			return (-1);
 		temporary = *stock;
-		if (!(*stock = strdup(t_li + 1)))
+		if (!(*stock = ft_strdup(t_li + 1)))
 			return (-1);
 		free(temporary);
 		temporary = NULL;
@@ -96,7 +86,9 @@ int		get_next_line(int const fd, char **line)
 
 	if (fd < 0 || !line || BUFF_SIZE <= 0)
 		return (-1);
-	*line = NULL;
+	if (!(*line = malloc(sizeof(char) * BUFF_SIZE)))
+		return (-1);
+	ft_bzero(*line, BUFF_SIZE);
 	if (stock)
 		if (ft_search_stock(&stock, line))
 			return (1);
@@ -107,7 +99,7 @@ int		get_next_line(int const fd, char **line)
 			return (1);
 		ft_assembly(line, board);
 	}
-	if (ret == 0 && *line != NULL)
+	if (ret == 0 && ft_strlen(*line) >= 1)
 		return (1);
 	return (ret < 0 ? -1 : 0);
 }

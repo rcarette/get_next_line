@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/09/29 18:19:08 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/18 16:34:26 by rcarette         ###   ########.fr       */
+/*   Created: 2016/09/13 02:59:02 by rcarette          #+#    #+#             */
+/*   Updated: 2016/11/17 14:55:19 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "includes/libft.h"
 
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 21
-# include <unistd.h>
-# include <stdlib.h>
-# include "libft/includes/libft.h"
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	char			*str_d;
+	const char		*str_s;
 
-int		get_next_line(int const fd, char **line);
-int		ft_search(char *board, char **str, char **line);
-int		ft_search_stock(char **stock, char **line);
-void	ft_assembly(char **line, char *b);
-#endif
+	str_d = (char *)dest;
+	str_s = (char *)src;
+	if (n)
+		while (n > 0)
+		{
+			*str_d++ = *str_s++;
+			--n;
+		}
+	return (dest);
+}

@@ -1,25 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rcarette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/09/29 18:19:08 by rcarette          #+#    #+#             */
-/*   Updated: 2016/11/18 16:34:26 by rcarette         ###   ########.fr       */
+/*   Created: 2016/11/05 12:16:55 by rcarette          #+#    #+#             */
+/*   Updated: 2016/11/17 14:53:40 by rcarette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
+#include "includes/libft.h"
 
-# define GET_NEXT_LINE_H
-# define BUFF_SIZE 21
-# include <unistd.h>
-# include <stdlib.h>
-# include "libft/includes/libft.h"
+t_list		*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
+{
+	t_list		*new;
+	t_list		*temporary;
 
-int		get_next_line(int const fd, char **line);
-int		ft_search(char *board, char **str, char **line);
-int		ft_search_stock(char **stock, char **line);
-void	ft_assembly(char **line, char *b);
-#endif
+	new = NULL;
+	if (lst && f)
+	{
+		new = f(lst);
+		temporary = new;
+		while (lst->next)
+		{
+			temporary->next = f(lst->next);
+			temporary = temporary->next;
+			lst = lst->next;
+		}
+	}
+	return (new);
+}
