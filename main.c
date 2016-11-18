@@ -10,6 +10,7 @@ int		main(void)
 	while ((ret = get_next_line(fd, &s1)))
 	{
 		printf("%d -- %s\n", ret, s1);
+		free(s1);
 	}
 	printf("%d -- %s\n", ret, s1);
 	close(fd);
